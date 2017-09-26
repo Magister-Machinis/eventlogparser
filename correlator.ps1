@@ -4,7 +4,8 @@ param (
 [string]$terminaltarget = 0,
 [string]$termlocaltarget = 0,
 [string]$dest = ".\",
-[int[]]$phases = @(1,2,3,4,5)
+[int[]]$phases = @(1,2,3,4,5),
+[string]$wideangle="NO"
 )
 
 
@@ -15,27 +16,33 @@ $eventstart = [scriptblock]{
 param (
 [string]$target,
 [string]$dest,
-[string]$loc)
+[string]$loc,
+[string]$wideangle="NO"
+)
 
-& $loc -target $target -dest $dest
+& $loc -target $target -dest $dest -wideangle $wideangle
 get-content "$dest\securityevents\ips.txt" | out-file -filepath "$dest\ips.txt" -append
 }
 $termstart = {
 param (
 [string]$target,
 [string]$dest,
-[string]$loc)
+[string]$loc,
+[string]$wideangle="NO"
+)
 
-& $loc -target $target -dest $dest
+& $loc -target $target -dest $dest -wideangle $wideangle
 get-content "$dest\connectionattempts\ips.txt" | out-file -filepath "$dest\ips.txt" -append
 }
 $localstart = [scriptblock]{
 param (
 [string]$target,
 [string]$dest,
-[string]$loc)
+[string]$loc,
+[string]$wideangle="NO"
+)
 
-& $loc -target $target -dest $dest
+& $loc -target $target -dest $dest -wideangle $wideangle
 get-content "$dest\localsessions\ips.txt" | out-file -filepath "$dest\ips.txt" -append
 }
 
@@ -50,7 +57,8 @@ cd $hmerun
 
 }
 $Combistart = [scriptblock]{
-param(
+
+ param(
 [string]$target,
 [string]$loc,
 [string]$hmerun)
@@ -94,7 +102,7 @@ if($phases -contains 1)
         $securityeventtarget = resolve-path $securityeventtarget
         $totalsize += (get-item $securityeventtarget).length
         $loc = resolve-path '.\securityeventlogextractor.ps1'
-        start-job -name "Security Events extraction" -scriptblock $eventstart -argumentlist $securityeventtarget,$dest,$loc
+        start-job -name "Security Events extraction" -scriptblock $eventstart -argumentlist $securityeventtarget,$dest,$loc,$wideangle
     }
     if($termlocaltarget -ne "0")
     {
@@ -102,7 +110,7 @@ if($phases -contains 1)
         $terminallocaltarget = resolve-path $termlocaltarget
         $totalsize += (get-item $termlocaltarget).length
         $loc = resolve-path '.\rdplocaleventlogextractor.ps1'
-        start-job -name "Terminal Services Local extraction" -scriptblock $localstart -argumentlist $terminallocaltarget,$dest,$loc
+        start-job -name "Terminal Services Local extraction" -scriptblock $localstart -argumentlist $terminallocaltarget,$dest,$loc,$wideangle
     }
     if($terminaltarget -ne "0")
     {
@@ -110,10 +118,10 @@ if($phases -contains 1)
         $terminaltarget = resolve-path $terminaltarget
         $totalsize += (get-item $terminaltarget).length
         $loc = resolve-path '.\rdpeventlogextractor.ps1'
-        start-job -name "Terminal Services extraction" -scriptblock $termstart -argumentlist $terminaltarget,$dest,$loc
+        start-job -name "Terminal Services extraction" -scriptblock $termstart -argumentlist $terminaltarget,$dest,$loc,$wideangle
     }
     write-host "Initiating phase 1 processing"
-    get-job | wait-job 
+    get-job | wait-job | receive-job | out-file -filepath "$dest\phase1log.txt"
 }
 if($phases -contains 2)
 {
@@ -124,7 +132,7 @@ if($phases -contains 2)
     $loc = resolve-path ".\combinator.ps1"
     start-job -name "Correlation" -scriptblock $Combistart -argumentlist $dest,$loc,$hmerun
     write-host "Initiating phase 2 processing"
-    get-job | wait-job
+    get-job | wait-job | receive-job | out-file -filepath "$dest\phase2log.txt"
 }
 if($phases -contains 3)
 {
@@ -160,7 +168,7 @@ if($phases -contains 3)
 
     }
 
-    get-job | wait-job
+    get-job | wait-job | receive-job | out-file -filepath "$dest\phase3log.txt"
 }
 if($phases -contains 4)
 {
@@ -211,7 +219,7 @@ if($phases -contains 4)
     $namecount | group | select Name,Count | sort-object count -descending | out-file -filepath "$dest\combined\namelist.txt"
     $ipcount | group | select Name,Count | sort-object count -descending | out-file -filepath "$dest\combined\iplist.txt"
 
-    get-job | wait-job
+    get-job | wait-job | receive-job | out-file -filepath "$dest\phase4log.txt"
 }
 
 $end = get-date

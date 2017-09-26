@@ -2,9 +2,33 @@
 
 param (
 [parameter(mandatory = $true)][string]$target = $(throw "input target terminal services evtx for ip address extraction/analysis, quotation not needed "),
-[string]$dest = ".\"
+[string]$dest = ".\",
+[string]$wideangle="NO"
 )
 
+function Test-FileLock {
+  param (
+    [parameter(Mandatory=$true)][string]$Path
+  )
+
+  $oFile = New-Object System.IO.FileInfo $Path
+
+  if ((Test-Path -Path $Path) -eq $false) {
+    return $false
+  }
+
+  try {
+    $oStream = $oFile.Open([System.IO.FileMode]::Open, [System.IO.FileAccess]::ReadWrite, [System.IO.FileShare]::None)
+
+    if ($oStream) {
+      $oStream.Close()
+    }
+    $false
+  } catch {
+    # file is locked by a process.
+    return $true
+  }
+}
 $target = resolve-path $target
 $dest = $dest + "\localsessions"
 md $dest
@@ -13,7 +37,28 @@ $target
 $dest
 write-host "extracting events from $target"
 start-sleep -s 1
-$EVEE = get-winevent -path $target | where {$_.id -eq "21" -or $_.id -eq "22" -or $_.id -eq "23" -or $_.id -eq "24" -or $_.id -eq "25"}
+$EVEE = @()
+if($wideangle -eq "NO")
+{
+    $EVEE = get-winevent -path $target | where {$_.id -eq "21" -or $_.id -eq "22" -or $_.id -eq "23" -or $_.id -eq "24" -or $_.id -eq "25"}
+}
+else
+{
+    cd $target
+	$templist = get-childitem $target -filter "*.evtx"
+    #$templist = $templist | sort-object {get-random}
+    foreach($item in $templist)
+    {
+		$item = resolve-path $item
+		write-host "$item"
+        while((Test-FileLock $item) -eq $true)
+        {
+            start-sleep -s 5
+        }
+        $EVEE += get-winevent -path $item | where {$_.id -eq "21" -or $_.id -eq "22" -or $_.id -eq "23" -or $_.id -eq "24" -or $_.id -eq "25"}
+    }
+}
+
 $EVHASHlist = @()
 $sizecount = 0
 write-host "Processing ingested events"
@@ -52,6 +97,12 @@ foreach($item in $EVHASHlist)
     }
     $UserName += $item.User
 }
+
+while((Test-FileLock "$dest\ips.txt") -eq $true)
+{
+    start-sleep -s 5
+}
+
 $IP | sort -unique | out-file -filepath "$dest\ips.txt" -append
 $IP | group | select Name,Count | sort Count -descending | export-csv "$dest\iptally.csv"
 $UserName2 = @()

@@ -4,6 +4,7 @@ param(
 [string]$hmerun,
 [string]$dest)
 cd $hmerun
+. .\anomaloustime.ps1
 $targetfile
 $flags = "Flags: | "
 $fileinfo = import-csv -path $targetfile -delimiter "`t"
@@ -52,6 +53,7 @@ param(
 [string]$hmerun,
 [string]$dest)
 cd $hmerun
+. .\anomaloustime.ps1
 $targetfile
 $flags = "Flags: | "
 $fileinfo = import-csv -path $targetfile -delimiter "`t"

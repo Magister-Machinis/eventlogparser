@@ -25,9 +25,9 @@ for($i = 0; $i -lt $fileinfo.length; $i++)
     if($i -gt 0)
     {
         $fileinfo[$i].TimeElapsed = [datetime]$fileinfo[$i].Time - [datetime]$fileinfo[$i-1].Time
-		if($fileinfo[$i}.TimeElapsed -le 0)
+		if($fileinfo[$i].TimeElapsed -le 0)
 		{
-			$fileinfo[$i}.TimeElapsed
+			$fileinfo[$i].TimeElapsed
 		}
     }
 }
