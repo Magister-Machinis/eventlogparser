@@ -126,13 +126,14 @@ if($phases -contains 1)
 if($phases -contains 2)
 {
     #combining output and gathering OSINT
-    $loc = resolve-path ".\Gopher.ps1"
+    $loc = resolve-path ".\OsintParser\Gopher.ps1"
     $hmerun = resolve-path ".\"
     start-job -name "OSINT" -scriptblock $OSINTstart -argumentlist "$dest\ips.txt",$dest,$loc,$hmerun
     $loc = resolve-path ".\combinator.ps1"
     start-job -name "Correlation" -scriptblock $Combistart -argumentlist $dest,$loc,$hmerun
     write-host "Initiating phase 2 processing"
     get-job | wait-job | receive-job | out-file -filepath "$dest\phase2log.txt"
+    Copy-item (Resolve-Path ".\OsintParser\ips.txt") (join-path -path $hmerun -childpath "\ips.txt)
 }
 if($phases -contains 3)
 {
