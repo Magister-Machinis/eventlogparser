@@ -196,7 +196,7 @@ if($phases -contains 4)
         $fileinfo = import-csv -path $thing.fullname -delimiter "`t" 
         $addressname = ($thing.fullname -split "\\")[-1] -split "\."
         $addressname = ($addressname[0..($addressname.count - 2)]) -join "."
-        $fileinfo = $fileinfo | select User,IP,EventID,Host,ID,Time,TimeElapsed,Notes,Country,Url,Rating
+        $fileinfo = $fileinfo | select User,IP,EventID,Host,ID,Time,TimeElapsed,Notes,Country,Url,Rating,Duration,DurationAnomaly,Pass1Anomaly,Pass2Anomaly,Pass3Anomaly,AnomalyRating
         $innercount = 1
         foreach($line in $fileinfo)
         {
