@@ -1,16 +1,23 @@
 #targets for the initial ingesters, the target file for output, and a list of which processing phases to enable (defaults to all active)
 param (
-[string]$securityeventtarget = 0,
-[string]$terminaltarget = 0,
-[string]$termlocaltarget = 0,
+[string]$target = ".\",
 [string]$dest = ".\",
-[int[]]$phases = @(1,2,3,4,5),
-[string]$wideangle="NO"
+[int[]]$phases = @(1,2,3,4,5)
 )
 
 
 $start = get-date #little timing mechanism
 $dest = resolve-path $dest
+$target = Resolve-Path $target
+if(Test-Path $target -PathType Container)
+{
+	$wideangle = "YES"
+	$totalsize = get-childitem $target  | Measure-Object -property length -sum
+}
+else
+{
+	$wideangle = "NO"
+}
 write-host "security $securityeventtarget `n terminal $terminaltarget `n terminal local $termlocaltarget"
 $eventstart = [scriptblock]{
 param (
@@ -96,30 +103,19 @@ $totalsize = 0
 
 if($phases -contains 1)
 {
-    if($securityeventtarget -ne "0")
-    {
-        write-host "spawning security event extraction job"
-        $securityeventtarget = resolve-path $securityeventtarget
-        $totalsize += (get-item $securityeventtarget).length
-        $loc = resolve-path '.\securityeventlogextractor.ps1'
-        start-job -name "Security Events extraction" -scriptblock $eventstart -argumentlist $securityeventtarget,$dest,$loc,$wideangle
-    }
-    if($termlocaltarget -ne "0")
-    {
-        write-host "spawning local rdp event extraction job"
-        $terminallocaltarget = resolve-path $termlocaltarget
-        $totalsize += (get-item $termlocaltarget).length
-        $loc = resolve-path '.\rdplocaleventlogextractor.ps1'
-        start-job -name "Terminal Services Local extraction" -scriptblock $localstart -argumentlist $terminallocaltarget,$dest,$loc,$wideangle
-    }
-    if($terminaltarget -ne "0")
-    {
-        write-host "spawning rdp connection extraction job"
-        $terminaltarget = resolve-path $terminaltarget
-        $totalsize += (get-item $terminaltarget).length
-        $loc = resolve-path '.\rdpeventlogextractor.ps1'
-        start-job -name "Terminal Services extraction" -scriptblock $termstart -argumentlist $terminaltarget,$dest,$loc,$wideangle
-    }
+    
+    write-host "spawning security event extraction job"
+    $loc = resolve-path '.\securityeventlogextractor.ps1'
+    start-job -name "Security Events extraction" -scriptblock $eventstart -argumentlist $target,$dest,$loc,$wideangle
+    
+    write-host "spawning local rdp event extraction job"
+    $loc = resolve-path '.\rdplocaleventlogextractor.ps1'
+    start-job -name "Terminal Services Local extraction" -scriptblock $localstart -argumentlist $target,$dest,$loc,$wideangle
+    
+    write-host "spawning rdp connection extraction job"
+    $loc = resolve-path '.\rdpeventlogextractor.ps1'
+    start-job -name "Terminal Services extraction" -scriptblock $termstart -argumentlist $target,$dest,$loc,$wideangle
+    
     write-host "Initiating phase 1 processing"
     get-job | wait-job | receive-job | out-file -filepath "$dest\phase1log.txt"
 }
