@@ -129,7 +129,7 @@ if($phases -contains 2)
     start-job -name "Correlation" -scriptblock $Combistart -argumentlist $dest,$loc,$hmerun
     write-host "Initiating phase 2 processing"
     get-job | wait-job | receive-job | out-file -filepath "$dest\phase2log.txt"
-    Copy-item (Resolve-Path ".\OsintParser\ips.txt") (join-path -path $hmerun -childpath "\ips.txt)
+    Copy-item (Resolve-Path ".\OsintParser\ips.txt") (join-path -path $hmerun -childpath "\ips.txt")
 }
 if($phases -contains 3)
 {
