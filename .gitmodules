@@ -1,6 +1,3 @@
-[submodule "C:/Users/8942/Source/Repos/eventlogparser"]
-	path = C:/Users/8942/Source/Repos/eventlogparser
-	url = https://github.com/Magister-Machinis/OsintParser.git
 [submodule "OsintParser"]
 	path = OsintParser
 	url = https://github.com/Magister-Machinis/OsintParser.git
