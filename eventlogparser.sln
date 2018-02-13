@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61AC6154-0F8D-47D8-B96F-5F27E048CCF6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C1ACD1-6296-4D22-B1CD-ADEA54A60DA3}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
@@ -11,16 +11,72 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		App.config = App.config
 		eventlogparser.pssproj = eventlogparser.pssproj
 		EventlogparserReDo.csproj = EventlogparserReDo.csproj
+		..\OsintParser\Gopher.ps1 = ..\OsintParser\Gopher.ps1
+		..\OsintParser\ips.txt = ..\OsintParser\ips.txt
+		..\OsintParser\LICENSE = ..\OsintParser\LICENSE
 		Program.cs = Program.cs
 		README.md = README.md
+		..\OsintParser\README.md = ..\OsintParser\README.md
 		Values.cs = Values.cs
 	EndProjectSection
 EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "OsintParser", "..\OsintParser\OsintParser.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C1ACD1-6296-4D22-B1CD-ADEA54A60DA3}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		App.config = App.config
+		eventlogparser.pssproj = eventlogparser.pssproj
+		EventlogparserReDo.csproj = EventlogparserReDo.csproj
+		..\OsintParser\Gopher.ps1 = ..\OsintParser\Gopher.ps1
+		..\OsintParser\ips.txt = ..\OsintParser\ips.txt
+		..\OsintParser\LICENSE = ..\OsintParser\LICENSE
+		Program.cs = Program.cs
+		README.md = README.md
+		..\OsintParser\README.md = ..\OsintParser\README.md
+		Values.cs = Values.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GopherGuts", "GopherGuts", "{EC85BEE4-23EA-477B-BB01-180E4DD821F4}"
+	ProjectSection(SolutionItems) = preProject
+		..\OsintParser\GopherGuts\dns.ps1 = ..\OsintParser\GopherGuts\dns.ps1
+		..\OsintParser\GopherGuts\dnsurl.ps1 = ..\OsintParser\GopherGuts\dnsurl.ps1
+		..\OsintParser\GopherGuts\geolocation.ps1 = ..\OsintParser\GopherGuts\geolocation.ps1
+		..\OsintParser\GopherGuts\geolocation6.ps1 = ..\OsintParser\GopherGuts\geolocation6.ps1
+		..\OsintParser\GopherGuts\ingester.ps1 = ..\OsintParser\GopherGuts\ingester.ps1
+		..\OsintParser\GopherGuts\ipv4sequence.ps1 = ..\OsintParser\GopherGuts\ipv4sequence.ps1
+		..\OsintParser\GopherGuts\ipv6sequence.ps1 = ..\OsintParser\GopherGuts\ipv6sequence.ps1
+		..\OsintParser\GopherGuts\rangeprocess.ps1 = ..\OsintParser\GopherGuts\rangeprocess.ps1
+		..\OsintParser\GopherGuts\ransomlistchecker.ps1 = ..\OsintParser\GopherGuts\ransomlistchecker.ps1
+		..\OsintParser\GopherGuts\ransomware.ps1 = ..\OsintParser\GopherGuts\ransomware.ps1
+		..\OsintParser\GopherGuts\spamhaus.ps1 = ..\OsintParser\GopherGuts\spamhaus.ps1
+		..\OsintParser\GopherGuts\suspectcheck.ps1 = ..\OsintParser\GopherGuts\suspectcheck.ps1
+		..\OsintParser\GopherGuts\time.txt = ..\OsintParser\GopherGuts\time.txt
+		..\OsintParser\GopherGuts\tor.ps1 = ..\OsintParser\GopherGuts\tor.ps1
+		..\OsintParser\GopherGuts\urlgeo.ps1 = ..\OsintParser\GopherGuts\urlgeo.ps1
+		..\OsintParser\GopherGuts\urlsequence.ps1 = ..\OsintParser\GopherGuts\urlsequence.ps1
+		..\OsintParser\GopherGuts\virustotal.ps1 = ..\OsintParser\GopherGuts\virustotal.ps1
+		..\OsintParser\GopherGuts\virustotalurl.ps1 = ..\OsintParser\GopherGuts\virustotalurl.ps1
+		..\OsintParser\GopherGuts\vtwaiter.ps1 = ..\OsintParser\GopherGuts\vtwaiter.ps1
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {426A486E-1DC2-49AB-BC8F-87DD20BD9DB3}
+		SolutionGuid = {7B270238-F5CC-4E58-94A5-66392A2A6BC4}
 	EndGlobalSection
 EndGlobal
