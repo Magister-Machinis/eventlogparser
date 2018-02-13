@@ -2,5 +2,5 @@
 	path = C:/Users/jfrom/Source/Repos/eventlogparser
 	url = https://github.com/Magister-Machinis/OsintParser.git
 [submodule "OsintParser"]
-	path = OsintParser
+	path = C:/Users/jfrom/Source/Repos/OsintParser
 	url = https://github.com/Magister-Machinis/OsintParser.git
